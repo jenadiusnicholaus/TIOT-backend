@@ -10,6 +10,5 @@ urlpatterns = [
      path('api/user-auth/', include('authentication.urls'))
 
 ]
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
