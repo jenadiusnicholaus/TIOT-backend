@@ -65,27 +65,16 @@ jobs:
         run: unzip release.zip
 
       - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2FE993A35DD34303B26A2622F9A60F8B }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_08D3896266A44D948B808E8108F6062E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15F0545C0F2B40A69FB74A2196E9081B }}
-          auth-type: SERVICE_PRINCIPAL
-          enable-AzPSSession: true
-
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
-
-      - name: Azure PowerShell script
-        uses: azure/powershell@v1
-        with:
-          azPSVersion: "latest"
-          inlineScript: |
-            Get-AzWebApp
+        run: az login
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2FE993A35DD34303B26A2622F9A60F8B }}
+          # AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_08D3896266A44D948B808E8108F6062E }}
+        # uses: azure/login@v1
+        # with:
+        #   client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2FE993A35DD34303B26A2622F9A60F8B }}
+        #   tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_08D3896266A44D948B808E8108F6062E }}
+        #   subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_15F0545C0F2B40A69FB74A2196E9081B }}
 
       - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v2
