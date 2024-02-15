@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework', # new,
     "authentication", # new
      'rest_framework_simplejwt', # new
@@ -85,7 +84,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-        # local
+    # local
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "travel_monkey_database",
