@@ -1,0 +1,12 @@
+{% autoescape off %}
+Hi {{ user.username }},
+
+Your OTP for account activation is: {{ otp }}
+
+Please enter this OTP in the app to confirm your registration.
+
+If you think this is a mistake, just ignore this email.
+
+Thanks,
+Your Team
+{% endautoescape %}
