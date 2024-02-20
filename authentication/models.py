@@ -9,11 +9,14 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=15, null=True, blank=True)
     otp = models.CharField(max_length=6, null=True, blank=True)
     otp_created_at = models.DateTimeField(default=timezone.now)
-    otp_used = models.BooleanField(default=False) 
-
+    otp_used = models.BooleanField(default=False)
+    is_rental_owner = models.BooleanField(default=False)
+    is_tenant = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
+    
+
     
 
 

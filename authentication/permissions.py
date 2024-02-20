@@ -15,6 +15,17 @@ class IsValidLogin(permissions.BasePermission):
             else:
                 return False
         except User.DoesNotExist:
-            return False    
-        # user = User.objects.get(id=request.data['username'])
+            return False
+
+# class IsRentalOwner(permissions.BasePermission):
+#     """
+#     Custom permission to only allow owners of an object to edit it.
+#     """
+
+
+#     def has_object_permission(self, request, view, obj):
+#         # Write permissions are only allowed to the owner of the snippet
+#         return obj.user == request.user or request.user.is_staff
+#     def has_permission(self, request, view):
+#         return request.user.has_perm('can_add_property')   
        
