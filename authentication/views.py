@@ -220,7 +220,7 @@ class ResetPasswordInitView(APIView):
         })
         email = EmailMessage(mail_subject, message, to=[request.data.get('email')])
         email.send()
-        return Response({'message': 'Password reset link sent successfully'}, status=status.HTTP_200_OK)
+        return Response({'message': "Password reset OTP code has been sent to your email address. Please visit your email and use that code to confirm your password reset request."}, status=status.HTTP_200_OK)
     
 class ResetPasswordConfirmView(APIView):
     permission_classes = [AllowAny]
