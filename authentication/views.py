@@ -237,15 +237,15 @@ class ResetPasswordConfirmView(APIView):
             try:
                 user = User.objects.get(email=serializer.data.get('email'))
             except User.DoesNotExist:
-                return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Check old password
             if not user.check_password(old_password):
-                return Response({'old_password': ['Wrong password.']}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Check token
             if not default_token_generator.check_token(user, token):
-                return Response({'token': ['Invalid token.']}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'message': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Set new password
             user.set_password(new_password)
