@@ -121,8 +121,8 @@ class ResendOtp(APIView):
         except User.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         user_profile = UserProfile.objects.get(user=user)
-        if user_profile.otp_used:
-            return Response({'error': 'OTP already used'}, status=status.HTTP_400_BAD_REQUEST)
+        # if user_profile.otp_used:
+        #     return Response({'error': 'OTP already used'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Calculate the time remaining until the user can request another OTP
         time_remaining = user_profile.otp_created_at + timedelta(minutes=5) - timezone.localtime(timezone.now())
