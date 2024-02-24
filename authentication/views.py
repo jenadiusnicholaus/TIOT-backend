@@ -230,8 +230,8 @@ class ResetPasswordConfirmView(APIView):
 
         if serializer.is_valid():
             token = serializer.data.get('token')
-            old_password = serializer.data.get('old_password')
             new_password = serializer.data.get('new_password')
+            confirm_password = serializer.data.get('confirm_password')
 
             # Get the user
             try:
@@ -239,9 +239,9 @@ class ResetPasswordConfirmView(APIView):
             except User.DoesNotExist:
                 return Response({'message': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Check old password
-            if not user.check_password(old_password):
-                return Response({'message': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Check if the new password and confirm password match
+            if new_password != confirm_password:
+                return Response({'message': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Check token
             if not default_token_generator.check_token(user, token):
@@ -276,3 +276,23 @@ class UpdateUserProfile(APIView):
         user_profile.save()
 
         return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
+    
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        user_profile = UserProfile.objects.get(user=user)
+        data = {
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'phone_number': user_profile.phone,
+
+        }
+        return Response(data, status=status.HTTP_200_OK)  
+
+
+

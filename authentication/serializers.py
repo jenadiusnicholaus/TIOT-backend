@@ -115,6 +115,6 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class ResetPasswordConfirmSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    old_password = serializers.CharField()
     new_password = serializers.CharField()
+    confirm_password = serializers.CharField()
     token = serializers.CharField()
