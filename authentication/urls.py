@@ -1,9 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
-from authentication.views import TinantRegisterUserModelView, ActivateAccount, ResendOtp, RentalOwnRegisterUserModelView, DeleteAccount, ChangePasswordView,ResetPasswordInitView ,ResetPasswordConfirmView,UpdateUserProfile, UserProfileView
+from authentication.views import TinantRegisterUserModelView, ActivateAccount, ResendOtp, RentalOwnRegisterUserModelView, DeleteAccount, ChangePasswordView,ResetPasswordInitView ,ResetPasswordConfirmView, UserProfileViewSet
 router = routers.DefaultRouter()
 router.register(r'user-registration', TinantRegisterUserModelView)
 router.register(r'rental-owner-registration', RentalOwnRegisterUserModelView)
+router.register(r'user-profile_vset', UserProfileViewSet)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -19,7 +20,5 @@ urlpatterns = [
     path('v1/change-password/', ChangePasswordView.as_view(), name='change_password'),
     path('v1/initiate-reset-password/', ResetPasswordInitView.as_view(), name='reset_password'),
     path('v1/confirm-reset-password/', ResetPasswordConfirmView.as_view(), name='confirm_reset_password'),
-    path('v1/update-user-profile/', UpdateUserProfile.as_view(), name='update_user_profile'),
-    path('v1/user-profile/', UserProfileView.as_view(), name='user_profile'),
 
 ]

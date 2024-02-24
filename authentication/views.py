@@ -19,7 +19,7 @@ from django.core.validators import validate_email
 
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import update_session_auth_hash
-from .serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer
+from .serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserProfileSerializer
 
 
 class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
@@ -258,8 +258,18 @@ class ResetPasswordConfirmView(APIView):
 
 
 
-class UpdateUserProfile(APIView):
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
     permission_classes = [IsAuthenticated]
+    serializer_class = UserProfileSerializer
+  
+
+    def list(self, request, *args, **kwargs):
+        user = request.user.userprofile
+        serializser = self.get_serializer(user)
+        return Response(serializser.data, status=status.HTTP_200_OK) 
+
 
     def put(self, request):
         user = request.user
@@ -275,24 +285,7 @@ class UpdateUserProfile(APIView):
         user_profile.phone = request.data.get('phone_number', user_profile.phone)
         user_profile.save()
 
-        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
-    
-
-class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        user_profile = UserProfile.objects.get(user=user)
-        data = {
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'phone_number': user_profile.phone,
-
-        }
-        return Response(data, status=status.HTTP_200_OK)  
+        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK) 
 
 
 

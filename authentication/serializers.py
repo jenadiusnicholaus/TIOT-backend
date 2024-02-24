@@ -9,8 +9,18 @@ from django.contrib.auth.password_validation import validate_password
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'password')
+        fields = ('username', 'email',)
 
+   
+class UserProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = UserProfile
+        fields = [
+            "user",
+            'user_profile_pic',
+            'phone',
+        ]
 
 class TenantRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -118,3 +128,5 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField()
     confirm_password = serializers.CharField()
     token = serializers.CharField()
+
+
