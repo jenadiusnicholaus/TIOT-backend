@@ -283,6 +283,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
         # Update fields in UserProfile model
         user_profile.phone = request.data.get('phone_number', user_profile.phone)
+        user_profile.user_profile_pic = request.data.get('user_profile_pic', user_profile.user_profile_pic)
         user_profile.save()
 
         return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK) 
