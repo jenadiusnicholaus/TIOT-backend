@@ -273,20 +273,35 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def put(self, request):
         user = request.user
-        user_profile = UserProfile.objects.get(user=user)
 
         # Update fields in User model
         user.first_name = request.data.get('first_name', user.first_name)
         user.last_name = request.data.get('last_name', user.last_name)
-        user.email = request.data.get('email', user.email)
+
+        new_email = request.data.get('email')
+        if new_email is not None:
+            # Validate new email
+            try:
+                User.objects.exclude(pk=user.pk).get(email=new_email)
+                return Response({'message': 'Email already in use.'}, status=status.HTTP_400_BAD_REQUEST)
+            except User.DoesNotExist:
+                user.email = new_email
+
         user.save()
 
         # Update fields in UserProfile model
+        try:
+            user_profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            return Response({'message': 'UserProfile does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
         user_profile.phone = request.data.get('phone_number', user_profile.phone)
-        user_profile.user_profile_pic = request.data.get('user_profile_pic', user_profile.user_profile_pic)
+
+        if 'user_profile_pic' in request.FILES:
+            user_profile.user_profile_pic = request.FILES['user_profile_pic']
+
         user_profile.save()
 
-        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK) 
-
+        return Response({'message': 'Profile updated successfully'}, status=status.HTTP_200_OK)
 
 
