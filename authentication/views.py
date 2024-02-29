@@ -15,12 +15,57 @@ from .models import User
 from django.utils import timezone
 from rest_framework.permissions import AllowAny
 from django.core.validators import validate_email
-
-
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import update_session_auth_hash
 from .serializers import ChangePasswordSerializer, ResetPasswordConfirmSerializer, UserProfileSerializer
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+from django.contrib.auth import get_user_model
+# from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
+from rest_framework import viewsets
+from django.conf import settings
+
+
+
+
+class GoogleSignInView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        try:
+            idinfo = id_token.verify_oauth2_token(request.data['access_token'], requests.Request(), settings.GOOGLE_CLIENT_ID)
+
+            if 'accounts.google.com' in idinfo['iss']:
+                User = get_user_model()
+                user, created = User.objects.get_or_create(email=idinfo['email'])
+                if created:
+                    user.username = idinfo['name']
+                    user.is_active = True   
+                    user.save()
+
+                    # Create the user profile
+                    UserProfile.objects.create(user=user, is_tenant=True)
+                    message = "User created successfully."
+                else:
+                    message = "Welcome back!"
+
+                refresh = RefreshToken.for_user(user)
+                response_data = {
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    "message": message,
+                    "username": user.username,
+                    "email": user.email,
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Invalid token issuer'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except ValueError as e:
+            return Response({'message': 'Invalid or malformed token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
     queryset = User.objects.all()

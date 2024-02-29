@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t_egp2416t_wc@q$8*8w0yy4ohb^c()2*629ugk^bo-#ykvosu'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,7 +43,12 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     'rest_framework', # new,
     "authentication", # new
-     'rest_framework_simplejwt', # new
+    'rest_framework_simplejwt', # new
+
+    # 'social_django',
+
+    #   'allauth',
+    # 'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -53,9 +59,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 ROOT_URLCONF = 'settings.urls'
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+
+]
+
 
 TEMPLATES = [
     {
@@ -75,6 +91,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 
+# SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+
+# REST_USE_JWT = True  # if you're using JWT for authentication
+# SOCIALACCOUNT_QUERY_EMAIL = True
+
+
+API_VERSION = config('API_VERSION')
+GOOGLE_CLIENT_ID=config('GOOGLE_CLIENT_ID')
+
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -88,9 +114,9 @@ DATABASES = {
     # local
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "travel_monkey_database",
-        "USER": "postgres",
-        "PASSWORD": "root",
+        "NAME":config('DB_NAME'),
+        "USER":config('DB_USER'),
+        "PASSWORD":config('DB_PASSWORD'),
     }
 
 }
@@ -99,6 +125,8 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         # Other authentication classes (if needed)
     ),
@@ -115,7 +143,6 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
-
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "VERIFYING_KEY": "",
@@ -154,8 +181,8 @@ SIMPLE_JWT = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'travelmonkey313@gmail.com'
-EMAIL_HOST_PASSWORD = 'higfjeswojeeahle'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

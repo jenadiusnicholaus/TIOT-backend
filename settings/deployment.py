@@ -5,6 +5,8 @@ from .settings import BASE_DIR
 
 SECRET_KEY = os.environ['SECRET']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+GOOGLE_CLIENT_ID=os.environ['GOOGLE_CLIENT_ID']
+API_VERSION = os.environ['API_VERSION']
 ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
 DEBUG = True
