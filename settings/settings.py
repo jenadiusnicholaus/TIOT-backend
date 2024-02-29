@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='no_secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
@@ -98,8 +98,8 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 # SOCIALACCOUNT_QUERY_EMAIL = True
 
 
-API_VERSION = config('API_VERSION')
-GOOGLE_CLIENT_ID=config('GOOGLE_CLIENT_ID')
+API_VERSION = config('API_VERSION', default='no_version')
+GOOGLE_CLIENT_ID=config('GOOGLE_CLIENT_ID', default='no_client_id')
 
 
 # Database
@@ -114,9 +114,9 @@ DATABASES = {
     # local
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME":config('DB_NAME'),
-        "USER":config('DB_USER'),
-        "PASSWORD":config('DB_PASSWORD'),
+        "NAME":config('DB_NAME', default='db_name'),
+        "USER":config('DB_USER', default='db_user'),
+        "PASSWORD":config('DB_PASSWORD', default='db_password'),
     }
 
 }
@@ -181,8 +181,8 @@ SIMPLE_JWT = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='no_email')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='no_password')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
