@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.contrib.auth.tokens import default_token_generator
+from django.http import BadHeaderError
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from rest_framework import  viewsets
@@ -250,22 +251,33 @@ class ChangePasswordView(APIView):
         return Response({ "message": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
 
+
 class ResetPasswordInitView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
         try:
             user = User.objects.get(email=request.data.get('email'))
+            token = default_token_generator.make_token(user)
+            mail_subject = 'Reset your password.'
+            message = render_to_string('reset_password.html', {
+                'user': user,
+                'token': token,
+            })
         except User.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
-        token = default_token_generator.make_token(user)
-        mail_subject = 'Reset your password.'
-        message = render_to_string('reset_password.html', {
-            'user': user,
-            'token': token,
-        })
-        email = EmailMessage(mail_subject, message, to=[request.data.get('email')])
-        email.send()
+        except Exception as e:
+            return Response({'error': 'An error occurred: {}'.format(str(e))}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            email = EmailMessage(mail_subject, message, to=[request.data.get('email')])
+            email.send()
+        except BadHeaderError:
+            return Response({'error': 'Invalid header found.'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': 'An error occurred while sending the email: {}'.format(str(e))}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         return Response({'message': "Password reset OTP code has been sent to your email address. Please visit your email and use that code to confirm your password reset request."}, status=status.HTTP_200_OK)
+    
     
 class ResetPasswordConfirmView(APIView):
     permission_classes = [AllowAny]
