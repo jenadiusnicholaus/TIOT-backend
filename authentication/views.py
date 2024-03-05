@@ -29,9 +29,6 @@ from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework import viewsets
 from django.conf import settings
 
-
-
-
 class GoogleSignInView(APIView):
     permission_classes = [AllowAny]
 
@@ -48,10 +45,14 @@ class GoogleSignInView(APIView):
                     user.save()
 
                     # Create the user profile
-                    UserProfile.objects.create(user=user, is_tenant=True)
+                    UserProfile.objects.create(user=user, is_tenant=True,
+                                               phone=request.data.get('phone_number', None),
+
+                                               )
                     message = "User created successfully."
                 else:
                     message = "Welcome back!"
+
 
                 refresh = RefreshToken.for_user(user)
                 response_data = {
@@ -122,15 +123,25 @@ class TinantRegisterUserModelView(viewsets.ModelViewSet):
     http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
+        User_profile = UserProfile.objects.filter(phone=request.data.get('phone_number'))
+
+        if User_profile.exists():
+            return Response({"message": {
+                "phone_number": ["Phone number already exists."]
+            }}, status=status.HTTP_400_BAD_REQUEST)
+        
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             otp = random.randint(100000, 999999)
             UserProfile.objects.create( 
-                user=user, otp=otp,
+                user=user, 
+                otp=otp,
                 is_tenant=True,
+                phone=request.data.get('phone_number'),
                 otp_created_at=timezone.localtime(timezone.now()))
-
+            
             # Send email with OTP
             mail_subject = 'Activate your account.'
             message = render_to_string('activate_account.html', {
@@ -278,7 +289,7 @@ class ResetPasswordInitView(APIView):
 
         return Response({'message': "Password reset OTP code has been sent to your email address. Please visit your email and use that code to confirm your password reset request."}, status=status.HTTP_200_OK)
     
-    
+
 class ResetPasswordConfirmView(APIView):
     permission_classes = [AllowAny]
 

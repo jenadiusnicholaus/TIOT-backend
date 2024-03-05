@@ -20,6 +20,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "user",
             'user_profile_pic',
             'phone',
+            'otp',
+            'otp_created_at',
+            
+
+          
         ]
 
 class TenantRegisterSerializer(serializers.ModelSerializer):
@@ -128,5 +133,8 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField()
     confirm_password = serializers.CharField()
     token = serializers.CharField()
+
+
+
 
 

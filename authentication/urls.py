@@ -23,6 +23,4 @@ urlpatterns = [
     path(f'{api_version}/confirm-reset-password/', ResetPasswordConfirmView.as_view(), name='confirm_reset_password'),
     path(f'{api_version}/social_auth/google/', GoogleSignInView.as_view(), name='google_login'),
 
-
-
 ]
