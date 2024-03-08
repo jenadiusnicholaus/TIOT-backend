@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework', # new,
     "authentication", # new
     'rest_framework_simplejwt', # new
+    'storages', # new
 
     # 'social_django',
 

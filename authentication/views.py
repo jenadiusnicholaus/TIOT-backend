@@ -32,6 +32,7 @@ from django.conf import settings
 class GoogleSignInView(APIView):
     permission_classes = [AllowAny]
 
+
     def post(self, request):
         try:
             idinfo = id_token.verify_oauth2_token(request.data['access_token'], requests.Request(), settings.GOOGLE_CLIENT_ID)
@@ -67,6 +68,7 @@ class GoogleSignInView(APIView):
                 return Response({'message': 'Invalid token issuer'}, status=status.HTTP_400_BAD_REQUEST)
 
         except ValueError as e:
+            print(e)
             return Response({'message': 'Invalid or malformed token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):

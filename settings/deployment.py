@@ -27,6 +27,16 @@ MIDDLEWARE = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
+AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
+AZURE_ACCOUNT_KEY = os.environ["AZURE_ACCOUNT_KEY"]
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+
+
+MEDIA_URL = "https://{}.blob.core.windows.net/{}/".format(
+    os.environ["AZURE_ACCOUNT_NAME"], os.environ["AZURE_CONTAINER"]
+)
+
 
 conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
 conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.split(' ')}
