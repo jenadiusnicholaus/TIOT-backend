@@ -68,7 +68,6 @@ class GoogleSignInView(APIView):
                 return Response({'message': 'Invalid token issuer'}, status=status.HTTP_400_BAD_REQUEST)
 
         except ValueError as e:
-            print(e)
             return Response({'message': 'Invalid or malformed token'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
