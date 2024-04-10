@@ -4,7 +4,7 @@ from rest_framework import viewsets
 
 from tuya_smart_home_devices.api import  TuyaDeviceController
 from tuya_smart_home_devices.models import Device, MyDevices
-from tuya_smart_home_devices.serializers import DeviceSerializer, MyDeviceSerializers
+from tuya_smart_home_devices.serializers import AddDeviceSerializers, DeviceSerializer, MyDeviceSerializers
 from django.conf import settings
 from rest_framework import status
 from rest_framework import routers
@@ -113,7 +113,7 @@ class RentalOwnerDeviceViewSet(viewsets.ModelViewSet):
             try:
                 #  user serializer to save device
                 if self.filter_queryset(Device.objects.filter(id=device_id)).exists():
-                    serializer = self.get_serializer(data={'device': device_id, 'user_id': request.user.id})
+                    serializer = AddDeviceSerializers(data={'device': device_id, 'user_id': request.user.id})
                     if serializer.is_valid():
                         serializer.save()
                         return Response({'success': True, 'message': 'Device added successfully'}, status=status.HTTP_201_CREATED)

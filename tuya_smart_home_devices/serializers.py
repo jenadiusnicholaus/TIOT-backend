@@ -13,3 +13,9 @@ class MyDeviceSerializers(serializers.ModelSerializer):
     class Meta:
         model = MyDevices
         fields = ['device' ]
+
+
+class AddDeviceSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = MyDevices
+        fields = '__all__'
