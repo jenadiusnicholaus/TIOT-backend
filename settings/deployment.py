@@ -51,6 +51,6 @@ DATABASES = {
 }
 
 # tuya creds
-ACCESS_ID = os.environ("TUYA_ACCESS_ID")
-ACCESS_KEY = os.environ("TUYA_ACCESS_KEY")
+ACCESS_ID = os.environ["TUYA_ACCESS_ID"]
+ACCESS_KEY = os.environ["TUYA_ACCESS_KEY"]
 
