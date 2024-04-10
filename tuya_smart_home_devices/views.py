@@ -42,31 +42,49 @@ class DeviceViewViewSet(viewsets.ModelViewSet):
             # get all devices 
             try:
                 response = tuyaDeviceController.get_device_list()
-                if response.get('success') == False:
+                if not response.get('success'):
                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                
+                try:
+                
+                    self.bulkSave(response)
+                except Exception as e:  
+                    return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    
+                queryset = self.filter_queryset(self.get_queryset())
+                if not queryset:
+                    return Response({'message': 'No devices found'}, status=status.HTTP_404_NOT_FOUND)
                 else:
-                    for device_data in response['result']['list']:
-                        self.save_device(device_data)
-                    queryset =  self.get_queryset()
                     serializer = self.get_serializer(queryset, many=True)
                     return Response(
-                        {
-                            'devices': serializer.data,
-                            'success': True,
-                            'message': 'Devices fetched successfully'   
-
-                        },
-                        
-                         status=status.HTTP_200_OK)
-                                    
+                            {
+                                'devices': serializer.data,
+                                'success': True,
+                                'message': 'Devices fetched successfully'
+                            },
+                            status=status.HTTP_200_OK
+                    )
             except Exception as e:
                 return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
             
+    def bulkSave(self, response):
+        try:
+            for device_data in response['result']['list']:
+                self.save_device(device_data)
+         
+        except Exception as e:
+               raise Exception(str(e))    
+                
     def save_device(self, device_data):
+     
         if not Device.objects.filter(id=device_data['id']).exists():
             serializer = DeviceSerializer(data=device_data)
             if serializer.is_valid():
                 serializer.save()
+            else:
+               
+                raise Exception(serializer.errors)
 
 
 
@@ -102,7 +120,7 @@ class RentalOwnerDeviceViewSet(viewsets.ModelViewSet):
                     else:
                         return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)   
                
-                return Response({'success': True, 'message': 'Device added successfully'}, status=status.HTTP_201_CREATED)
+                return Response({'success': True, 'message': 'Device does exists'}, status=status.HTTP_201_CREATED)
             except Device.DoesNotExist:
                 return Response({'message': 'Device not found'}, status=status.HTTP_404_NOT_FOUND)
             except Exception as e:
