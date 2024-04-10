@@ -49,3 +49,8 @@ DATABASES = {
         'PASSWORD': conn_str_params['password'],
     }
 }
+
+# tuya creds
+ACCESS_ID = os.environ("TUYA_ACCESS_ID")
+ACCESS_KEY = os.environ("TUYA_ACCESS_KEY")
+

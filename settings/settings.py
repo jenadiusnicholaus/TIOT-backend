@@ -45,8 +45,7 @@ INSTALLED_APPS = [
     "authentication", # new
     'rest_framework_simplejwt', # new
     'storages', # new
-
-    # 'social_django',
+    'tuya_smart_home_devices',
 
     #   'allauth',
     # 'allauth.account',
@@ -128,8 +127,7 @@ REST_FRAMEWORK = {
         # Other authentication classes (if needed)
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-         "authentication.permissions.IsValidLogin",
+      
     ]
 }
 
@@ -184,7 +182,13 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-
+ACCESS_ID = config('ACCESS_ID', default='no_access_id')
+ACCESS_KEY = config('ACCESS_KEY', default='no_access_key')
+ENDPOINT="https://openapi.tuyaeu.com"
+MQ_ENDPOINT = "wss://mqe.tuyacn.com:8285/"
+USERNAME= config('USERNAME', default='no_username')
+PASSWORD= config('PASSWORD', default='no_password')
+WATTER_METER_DEVICE_ID = "vdevo171231422113076"	
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
