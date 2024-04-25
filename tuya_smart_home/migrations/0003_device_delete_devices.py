@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tuya_smart_home_devices', '0002_remove_devices_device_category_and_more'),
+        ('tuya_smart_home', '0002_remove_devices_device_category_and_more'),
     ]
 
     operations = [

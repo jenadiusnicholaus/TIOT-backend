@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "authentication", # new
     'rest_framework_simplejwt', # new
     'storages', # new
-    'tuya_smart_home_devices',
+    'tuya_smart_home',
+     'corsheaders',
 
     #   'allauth',
     # 'allauth.account',
@@ -59,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 
     # 'allauth.account.middleware.AccountMiddleware',
 
@@ -235,4 +238,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SITE_ID = 1
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.1.181:8080",
+    # other origins...
+]
 

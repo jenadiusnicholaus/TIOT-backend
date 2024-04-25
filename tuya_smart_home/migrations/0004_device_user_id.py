@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tuya_smart_home_devices', '0003_device_delete_devices'),
+        ('tuya_smart_home', '0003_device_delete_devices'),
     ]
 
     operations = [

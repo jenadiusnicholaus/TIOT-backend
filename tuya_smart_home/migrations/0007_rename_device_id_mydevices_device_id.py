@@ -6,13 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tuya_smart_home_devices', '0007_rename_device_id_mydevices_device_id'),
+        ('tuya_smart_home', '0006_remove_device_user_id_mydevices'),
     ]
 
     operations = [
         migrations.RenameField(
             model_name='mydevices',
-            old_name='device_id',
-            new_name='device',
+            old_name='Device_id',
+            new_name='device_id',
         ),
     ]

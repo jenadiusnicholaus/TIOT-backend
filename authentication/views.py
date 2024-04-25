@@ -28,6 +28,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework import viewsets
 from django.conf import settings
+from django.contrib.auth.models import Group
 
 class GoogleSignInView(APIView):
     permission_classes = [AllowAny]
@@ -42,14 +43,20 @@ class GoogleSignInView(APIView):
                 user, created = User.objects.get_or_create(email=idinfo['email'])
                 if created:
                     user.username = idinfo['name']
-                    user.is_active = True   
+                    user.is_active = True 
+                     
                     user.save()
-
                     # Create the user profile
                     UserProfile.objects.create(user=user, is_tenant=True,
                                                phone=request.data.get('phone_number', None),
-
                                                )
+                
+                    # Add user to Tenant's Group
+                    user_group, group_created = Group.objects.get_or_create(name='Tenant')
+                    if not user.groups.filter(name='Tenant').exists():
+                        user.groups.add(user_group)
+
+                    
                     message = "User created successfully."
                 else:
                     message = "Welcome back!"
@@ -86,8 +93,14 @@ class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
                 user=user, otp=otp,
                 is_rental_owner=True,
                 otp_created_at=timezone.localtime(timezone.now()))
+            
 
+            # add to Rental owner's Group
+            user_group, created = Group.objects.get_or_create(name='Rental Owner')
+            if not user.groups.filter(name='Rental Owner').exists():
+                user.groups.add(user_group)
             # Send email with OTP
+
             mail_subject = 'Activate your account.'
             message = render_to_string('activate_account.html', {
                 'user': user,
@@ -108,6 +121,7 @@ class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
                 "user_id": user.id,
                 "username": user.username,
                 "email": user.email,
+                "is_active": user.is_active 
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(
@@ -142,6 +156,11 @@ class TinantRegisterUserModelView(viewsets.ModelViewSet):
                 is_tenant=True,
                 phone=request.data.get('phone_number'),
                 otp_created_at=timezone.localtime(timezone.now()))
+            # Add user to Tenant's Group
+            user_group, group_created = Group.objects.get_or_create(name='Tenant')
+            if not user.groups.filter(name='Tenant').exists():
+                user.groups.add(user_group)
+
             
             # Send email with OTP
             mail_subject = 'Activate your account.'
@@ -209,6 +228,7 @@ class ResendOtp(APIView):
 class ActivateAccount(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
+ 
         try:
             user = User.objects.get(email=request.data.get('email'))
         except User.DoesNotExist:
@@ -296,8 +316,8 @@ class ResetPasswordConfirmView(APIView):
 
     def post(self, request):
         serializer = ResetPasswordConfirmSerializer(data=request.data)
-
         if serializer.is_valid():
+           
             token = serializer.data.get('token')
             new_password = serializer.data.get('new_password')
             confirm_password = serializer.data.get('confirm_password')
@@ -321,8 +341,9 @@ class ResetPasswordConfirmView(APIView):
             user.save()
 
             return Response({'message': 'Password reset successfully'}, status=status.HTTP_200_OK)
+        else:
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
 
@@ -342,7 +363,6 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def put(self, request):
         user = request.user
-
         # Update fields in User model
         user.first_name = request.data.get('first_name', user.first_name)
         user.last_name = request.data.get('last_name', user.last_name)

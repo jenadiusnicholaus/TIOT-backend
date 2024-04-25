@@ -7,13 +7,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tuya_smart_home_devices', '0008_rename_device_id_mydevices_device'),
+        ('tuya_smart_home', '0008_rename_device_id_mydevices_device'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='mydevices',
             name='device',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='my_device', to='tuya_smart_home_devices.device', unique=True),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='my_device', to='tuya_smart_home.device', unique=True),
         ),
     ]

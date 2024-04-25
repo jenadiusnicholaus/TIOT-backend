@@ -9,7 +9,7 @@ from django.contrib.auth.password_validation import validate_password
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name')
+        fields = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff')
 
    
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -20,11 +20,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "user",
             'user_profile_pic',
             'phone',
-            'otp',
-            'otp_created_at',
-            
-
-          
+            "is_rental_owner",
+            "is_tenant",
+ 
         ]
 
 class TenantRegisterSerializer(serializers.ModelSerializer):
