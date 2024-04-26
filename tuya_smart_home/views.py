@@ -338,7 +338,7 @@ class RentalOwnerPropertyDeviceViewSet(viewsets.ModelViewSet):
        
 
 class DeviceFunctionsViewSet(viewsets.ModelViewSet):
-    queryset =  TenantRoomDevices.objects.all() 
+    queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer
     permission_classes = [IsValidLogin, IsAuthenticated]
     def list(self, request):
@@ -358,7 +358,7 @@ class DeviceFunctionsViewSet(viewsets.ModelViewSet):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 class  ControllDeviceVset(viewsets.ModelViewSet):
-    queryset =  TenantRoomDevices.objects.all() 
+    queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer
     permission_classes = [IsValidLogin, IsAuthenticated]
 
@@ -380,7 +380,7 @@ class  ControllDeviceVset(viewsets.ModelViewSet):
            
 
 class DevicePropertiesViewSet(viewsets.ModelViewSet):
-    queryset =  TenantRoomDevices.objects.all() 
+    queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer
     permission_classes = [IsValidLogin, IsAuthenticated]
     def list(self, request):
@@ -397,7 +397,7 @@ class DevicePropertiesViewSet(viewsets.ModelViewSet):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 class DeviceStatusViewSet(viewsets.ModelViewSet):
-    queryset =  TenantRoomDevices.objects.all() 
+    queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer
     permission_classes = [IsValidLogin, IsAuthenticated]
     def list(self, request):
@@ -414,7 +414,7 @@ class DeviceStatusViewSet(viewsets.ModelViewSet):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
 class DeviceLogsViewSet(viewsets.ModelViewSet):
-    queryset =  TenantRoomDevices.objects.all() 
+    queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer
     permission_classes = [IsValidLogin, IsAuthenticated]
     def list(self, request):
