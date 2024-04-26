@@ -243,6 +243,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.181:8080",
-    # other origins...
+    "http://192.168.1.100:8080"
+  
 ]
 
