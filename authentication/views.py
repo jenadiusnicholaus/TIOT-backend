@@ -351,14 +351,17 @@ class ResetPasswordConfirmView(APIView):
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,]
     serializer_class = UserProfileSerializer
   
 
     def list(self, request, *args, **kwargs):
-        user = request.user.userprofile
-        serializser = self.get_serializer(user)
-        return Response(serializser.data, status=status.HTTP_200_OK) 
+        try:
+            user = request.user.userprofile
+            serializser = self.get_serializer(user)
+            return Response(serializser.data, status=status.HTTP_200_OK)
+        except UserProfile.DoesNotExist:    
+            return Response({'message': 'UserProfile does not exist.'}, status=status.HTTP_400_BAD_REQUEST) 
 
 
     def put(self, request):

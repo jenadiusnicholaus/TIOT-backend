@@ -8,15 +8,26 @@ from rest_framework import viewsets
 
 from tuya_smart_home.decice_api import  TuyaDeviceController
 from tuya_smart_home.models import Device, RentalOwnerProPertyRoomtype, RentalOwnerProperty, RentalOwnerPropertyDevices, RentalOwnerPropertyRoom, TenantRoomDevices
-from tuya_smart_home.serializers import  DeviceSerializer, PropertyDeviceSerializers, RentalOwnerPropertySerializers, RentalOwnerRoomSerializers, RentalOwnerRoomTypeSerializers
+from tuya_smart_home.serializers import  DashboordStatusSerializer, DeviceSerializer, PropertyDeviceSerializers, RentalOwnerPropertySerializers, RentalOwnerRoomSerializers, RentalOwnerRoomTypeSerializers
 from django.conf import settings
 from rest_framework import status
 from rest_framework import routers
 from authentication.permissions import  IsRentalOwner, IsValidLogin
 from rest_framework.permissions import (DjangoModelPermissionsOrAnonReadOnly, IsAuthenticated)
 from rest_framework.views import APIView
+# User
+from django.contrib.auth.models import User
+class DashBoardStatsViewSet(viewsets.ModelViewSet):
+    queryset =  User.objects.all()
+    serializer_class = DashboordStatusSerializer
+    permission_classes = [IsValidLogin, IsRentalOwner, IsAuthenticated]
+    def list(self, request):
+        user = request.user
+        serializers = self.get_serializer(user) 
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
-# Create your views here.
+        
+       
 
 class DeviceViewViewSet(viewsets.ModelViewSet):
     queryset =  Device.objects.all() 
@@ -333,10 +344,8 @@ class RentalOwnerPropertyDeviceViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
+# Todo: 
         
-        
-       
-
 class DeviceFunctionsViewSet(viewsets.ModelViewSet):
     queryset =  Device.objects.all() 
     serializer_class = DeviceSerializer

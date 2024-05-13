@@ -86,6 +86,7 @@ class Device(models.Model):
         verbose_name_plural = "Devices"
         verbose_name = "Device"
 
+
 class RentalOwnerRoomDevices(models.Model):
     device_id = models.ForeignKey(Device, on_delete=models.CASCADE, null=True, blank=True)
     room_id = models.ForeignKey(RentalOwnerPropertyRoom, on_delete=models.CASCADE, null=True, blank=True)
@@ -111,8 +112,10 @@ class RentalOwnerPropertyDevices(models.Model):
     
     def __str__(self):
         return self.device_id.name if self.device_id and self.device_id.name else 'No name'
-        
+    
 
+
+    
 class TenantRoomDevices(models.Model):
     device = models.ForeignKey(Device, on_delete=models.CASCADE, null=True, blank=True, unique=True, related_name='tenant_room_device')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
