@@ -45,11 +45,9 @@ INSTALLED_APPS = [
     "authentication", # new
     'rest_framework_simplejwt', # new
     'storages', # new
-    'tuya_smart_home',
-     'corsheaders',
+    'corsheaders',
+    "ejabberd_integration",
 
-    #   'allauth',
-    # 'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +68,11 @@ ROOT_URLCONF = 'settings.urls'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 
+
+
 ]
+
+
 
 
 TEMPLATES = [
@@ -243,4 +245,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.100:8080"
   
 ]
+
+EJABBERD_API_BU = config('EJABBERD_API_BU', default='no_ejabberd_api_url')
+EJABBERD_API_ACCESS_TOKEN = config('EJABBERD_API_ACCESS_TOKEN', default='no_ejabberd_api_access_token')
 

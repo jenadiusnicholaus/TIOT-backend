@@ -20,7 +20,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "user",
             'user_profile_pic',
             'phone',
-            "is_rental_owner",
+            "is_client",
             "is_tenant",
  
         ]

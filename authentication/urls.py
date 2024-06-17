@@ -1,10 +1,10 @@
 from django.urls import path, include, re_path
 from django.conf import settings
 from rest_framework import routers
-from authentication.views import TinantRegisterUserModelView, ActivateAccount, ResendOtp, RentalOwnRegisterUserModelView, DeleteAccount, ChangePasswordView,ResetPasswordInitView ,ResetPasswordConfirmView, UserProfileViewSet, GoogleSignInView
+from authentication.views import TinantRegisterUserModelView, ActivateAccount, ResendOtp, UserRegistration, DeleteAccount, ChangePasswordView,ResetPasswordInitView ,ResetPasswordConfirmView, UserProfileViewSet, GoogleSignInView
 router = routers.DefaultRouter()
 router.register(r'user-registration', TinantRegisterUserModelView)
-router.register(r'rental-owner-registration', RentalOwnRegisterUserModelView)
+router.register(r'rental-owner-registration', UserRegistration)
 router.register(r'user-profile_vset', UserProfileViewSet)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,

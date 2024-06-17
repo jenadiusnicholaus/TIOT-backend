@@ -24,7 +24,6 @@ from .serializers import ChangePasswordSerializer, ResetPasswordConfirmSerialize
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from django.contrib.auth import get_user_model
-# from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework import viewsets
 from django.conf import settings
@@ -32,8 +31,6 @@ from django.contrib.auth.models import Group
 
 class GoogleSignInView(APIView):
     permission_classes = [AllowAny]
-
-
     def post(self, request):
         try:
             idinfo = id_token.verify_oauth2_token(request.data['access_token'], requests.Request(), settings.GOOGLE_CLIENT_ID)
@@ -77,7 +74,7 @@ class GoogleSignInView(APIView):
         except ValueError as e:
             return Response({'message': 'Invalid or malformed token'}, status=status.HTTP_400_BAD_REQUEST)
 
-class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
+class UserRegistration(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = RentalOwnerRegisterSerializer
     permission_classes = [AllowAny]
@@ -90,8 +87,9 @@ class RentalOwnRegisterUserModelView(viewsets.ModelViewSet):
             user = serializer.save()
             otp = random.randint(100000, 999999)
             UserProfile.objects.create( 
-                user=user, otp=otp,
-                is_rental_owner=True,
+                user=user, 
+                otp=otp,
+                is_client=True,
                 otp_created_at=timezone.localtime(timezone.now()))
             
 
@@ -220,10 +218,6 @@ class ResendOtp(APIView):
         email.send()
         return Response({'message': 'OTP sent successfully'}, status=status.HTTP_200_OK)
         
-
-
-    
-
 
 class ActivateAccount(APIView):
     permission_classes = [AllowAny]

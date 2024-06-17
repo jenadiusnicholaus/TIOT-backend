@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     otp_created_at = models.DateTimeField(default=timezone.now)
 
     otp_used = models.BooleanField(default=False)
-    is_rental_owner = models.BooleanField(default=False)
+    is_client = models.BooleanField(default=False)
     is_tenant = models.BooleanField(default=False)
 
     def __str__(self):
